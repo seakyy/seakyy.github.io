@@ -8,6 +8,6 @@
 
 - Deutsch
 - Englisch
-- Framzösisch
+- Französisch
 - C#
 - (C++ & Lua)
