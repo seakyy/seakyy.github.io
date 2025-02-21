@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(45deg, #ff6b81, #f6e58d);
+    color: #2d3436;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    padding: 2rem;
+    text-align: center;
+    background-color: #130f40;
+    color: white;
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    text-align: center;
+}
+
+footer {
+    padding: 1rem;
+    text-align: center;
+    background-color: #30336b;
+    color: white;
+    margin-top: auto;
+}
