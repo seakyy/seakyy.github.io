@@ -6,19 +6,70 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow-x: hidden;
 }
 
 header {
     padding: 2rem;
-    text-align: center;
     background-color: #130f40;
     color: white;
+    width: 100%;
 }
 
-main {
-    flex: 1;
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
     padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.skills ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.skills li {
+    background: #130f40;
+    color: white;
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.project {
+    background: #dfe6e9;
+    padding: 1rem;
+    margin: 0.5rem auto;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     text-align: center;
+} 
+
+.contact .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #130f40;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
 }
 
 footer {
@@ -26,5 +77,6 @@ footer {
     text-align: center;
     background-color: #30336b;
     color: white;
+    width: 100%;
     margin-top: auto;
 }
