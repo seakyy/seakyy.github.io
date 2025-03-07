@@ -3,57 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="David Koteski - Application Developer specializing in C#, SQL, Docker, and full-stack development.">
     <title>David Koteski - Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script defer src="script.js"></script>
 </head>
 <body>
     <header>
-        <h1>David Koteski</h1>
-        <p>„Always learning, always improving.“</p>
+        <div class="container header-container">
+            <div class="header-left">
+                <h1>David Koteski</h1>
+                <p class="tagline">„Always learning, always improving."</p>
+            </div>
+            <nav class="header-right">
+                <button id="theme-toggle" aria-label="Theme umschalten">
+                    <span class="light-icon">☀️</span>
+                    <span class="dark-icon">🌙</span>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <section class="about">
-        <div class="container">
-            <h2>About Me</h2>
-            <p>I am an Application Developer with expertise in C#, SQL, Docker, and frontend & backend development. Passionate about scalable solutions, security, and automation.</p>
-        </div>
-    </section>
+    <main>
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Me</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>I am an Application Developer with expertise in C#, SQL, Docker, and frontend & backend development. Passionate about scalable solutions, security, and automation.</p>
+                        <p>With a focus on delivering high-quality code and intuitive user experiences, I strive to build applications that make a difference.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section class="skills">
-        <div class="container">
-            <h2>Skills & Technologies</h2>
-            <ul>
-                <li>C# (Primary)</li>
-                <li>Docker (Second-best)</li>
-                <li>SQL & Database Management</li>
-                <li>Frontend & Backend Development</li>
-                <li>Cloud Computing (AWS, Linux)</li>
-                <li>Security & Risk Management</li>
-                <li>Test-Driven Development (TDD)</li>
-                <li>Scrum & Agile Methodologies</li>
-            </ul>
-        </div>
-    </section>
+        <section id="skills" class="skills">
+            <div class="container">
+                <h2>Skills & Technologies</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Languages & Frameworks</h3>
+                        <ul>
+                            <li>C# (Primary)</li>
+                            <li>.NET Core/.NET 5+</li>
+                            <li>HTML/CSS/JavaScript</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>DevOps & Tools</h3>
+                        <ul>
+                            <li>Docker</li>
+                            <li>Git/GitHub</li>
+                            <li>CI/CD Pipelines</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Databases</h3>
+                        <ul>
+                            <li>SQL & Database Management</li>
+                            <li>Entity Framework</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Other Skills</h3>
+                        <ul>
+                            <li>Cloud Computing (AWS, Linux)</li>
+                            <li>Security & Risk Management</li>
+                            <li>Scrum & Agile Methodologies</li>
+                            <li>Test-Driven Development (TDD)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section class="projects">
-        <div class="container">
-            <h2>GitHub Projects</h2>
-            <div id="github-projects">Loading projects...</div>
-        </div>
-    </section>
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>GitHub Projects</h2>
+                <div id="github-projects" class="projects-grid">
+                    <div class="project-loader">
+                        <div class="loading-spinner"></div>
+                        <p>Loading projects...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <section class="contact">
-        <div class="container">
-            <h2>Contact Me</h2>
-            <p>Let's discuss how I can bring value to your team.</p>
-            <a href="david.koteski@outlook.com" class="btn">Email Me</a>
-            <a href="https://www.linkedin.com/in/david-koteski-22534128b/" class="btn">LinkedIn</a>
-        </div>
-    </section>
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contact Me</h2>
+                <p>Let's discuss how I can bring value to your team.</p>
+                <div class="contact-buttons">
+                    <a href="mailto:david.koteski@outlook.com" class="btn" aria-label="Email David Koteski">Email Me</a>
+                    <a href="https://www.linkedin.com/in/david-koteski-22534128b/" target="_blank" rel="noopener noreferrer" class="btn" aria-label="LinkedIn Profile">LinkedIn</a>
+                </div>
+                <div class="user-info">
+                    <p>GitHub Username: <span id="current-user">seakyy</span></p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
-        <p>© 2025 David Koteski</p>
+        <div class="container footer-container">
+            <p>&copy; <span id="current-year">2025</span> David Koteski</p>
+            <div class="footer-right">
+                <span id="current-time"></span>
+                <a href="#" id="back-to-top" class="back-to-top" aria-label="Back to top">↑</a>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
