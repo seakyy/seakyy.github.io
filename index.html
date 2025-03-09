@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,8 +11,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css">
     <script defer src="script.js"></script>
 </head>
+
 <body>
     <header>
         <div class="container header-container">
@@ -35,6 +40,12 @@
     </header>
 
     <main>
+        <section id="chatbot" class="chatbot">
+            <div id="botui-app">
+                <bot-ui></bot-ui>
+            </div>
+        </section>
+
         <section id="about" class="about">
             <div class="container">
                 <h2>About Me</h2>
@@ -99,6 +110,47 @@
             </div>
         </section>
 
+        <section id="interactive-cards" class="interactive-cards">
+            <div class="container">
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>Front Side</h2>
+                            <p>Some information</p>
+                        </div>
+                        <div class="card-back">
+                            <h2>Back Side</h2>
+                            <p>More information</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>Front Side</h2>
+                            <p>Some information</p>
+                        </div>
+                        <div class="card-back">
+                            <h2>Back Side</h2>
+                            <p>More information</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h2>Front Side</h2>
+                            <p>Some information</p>
+                        </div>
+                        <div class="card-back">
+                            <h2>Back Side</h2>
+                            <p>More information</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="contact">
             <div class="container">
                 <h2>Contact Me</h2>
@@ -124,4 +176,5 @@
         </div>
     </footer>
 </body>
+
 </html>

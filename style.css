@@ -625,3 +625,53 @@ footer {
         font-size: 0.8em;
     }
 }
+
+.interactive-cards {
+    padding: 20px 0;
+}
+
+.interactive-cards .container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    width: 300px;
+    height: 200px;
+    perspective: 1000px;
+    margin: 10px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: inherit; /* Use the same background color as the website */
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    color: white;
+    background-color: #3498db; /* Background color for the back side */
+}
