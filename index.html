@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,172 +8,251 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script defer src="script.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="container header-container">
-            <div class="header-left">
-                <h1>David Koteski</h1>
-                <p class="tagline">„Always learning, always improving."</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-text">David Koteski</span>
             </div>
-            <nav class="header-right">
-                <button id="theme-toggle" aria-label="Theme umschalten">
-                    <span class="light-icon">☀️</span>
-                    <span class="dark-icon">🌙</span>
-                </button>
-                <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
-    </header>
+    </nav>
 
-    <main>
-        <section id="chatbot" class="chatbot">
-            <div id="botui-app">
-                <bot-ui></bot-ui>
-            </div>
-        </section>
-
-        <section id="about" class="about">
-            <div class="container">
-                <h2>About Me</h2>
-                <div class="about-content">
-                    <div class="about-text">
-                        <p>I am an Application Developer with expertise in C#, SQL, Docker, and frontend & backend development. Passionate about scalable solutions, security, and automation.</p>
-                        <p>With a focus on delivering high-quality code and intuitive user experiences, I strive to build applications that make a difference.</p>
-                    </div>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
+                <h1 class="hero-title">
+                    Hi, I'm <span class="text-gradient">David Koteski</span>
+                </h1>
+                <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                    Application Developer specializing in modern web technologies
+                </p>
+                <p class="hero-description" data-aos="fade-up" data-aos-delay="400">
+                    Always learning, always improving. Passionate about creating scalable solutions and beautiful user experiences.
+                </p>
+                <div class="hero-buttons" data-aos="fade-up" data-aos-delay="600">
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
                 </div>
             </div>
-        </section>
-
-        <section id="skills" class="skills">
-            <div class="container">
-                <h2>Skills & Technologies</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3>Languages & Frameworks</h3>
-                        <ul>
-                            <li>C# (Primary)</li>
-                            <li>.NET Core/.NET 5+</li>
-                            <li>HTML/CSS/JavaScript</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h3>DevOps & Tools</h3>
-                        <ul>
-                            <li>Docker</li>
-                            <li>Git/GitHub</li>
-                            <li>CI/CD Pipelines</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h3>Databases</h3>
-                        <ul>
-                            <li>SQL & Database Management</li>
-                            <li>Entity Framework</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <h3>Other Skills</h3>
-                        <ul>
-                            <li>Cloud Computing (AWS, Linux)</li>
-                            <li>Security & Risk Management</li>
-                            <li>Scrum & Agile Methodologies</li>
-                            <li>Test-Driven Development (TDD)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="projects">
-            <div class="container">
-                <h2>GitHub Projects</h2>
-                <div id="github-projects" class="projects-grid">
-                    <div class="project-loader">
-                        <div class="loading-spinner"></div>
-                        <p>Loading projects...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="interactive-cards" class="interactive-cards">
-            <div class="container">
-                <div class="card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h2>Front Side</h2>
-                            <p>Some information</p>
-                        </div>
-                        <div class="card-back">
-                            <h2>Back Side</h2>
-                            <p>More information</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h2>Front Side</h2>
-                            <p>Some information</p>
-                        </div>
-                        <div class="card-back">
-                            <h2>Back Side</h2>
-                            <p>More information</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <h2>Front Side</h2>
-                            <p>Some information</p>
-                        </div>
-                        <div class="card-back">
-                            <h2>Back Side</h2>
-                            <p>More information</p>
+            <div class="hero-visual" data-aos="fade-left" data-aos-delay="800">
+                <div class="floating-card">
+                    <div class="card-content">
+                        <div class="code-preview">
+                            <div class="code-header">
+                                <div class="dots">
+                                    <span class="dot red"></span>
+                                    <span class="dot yellow"></span>
+                                    <span class="dot green"></span>
+                                </div>
+                                <span class="filename">Portfolio.cs</span>
+                            </div>
+                            <div class="code-body">
+                                <div class="code-line">
+                                    <span class="keyword">public class</span> 
+                                    <span class="class-name">Developer</span>
+                                </div>
+                                <div class="code-line">
+                                    <span class="punctuation">{</span>
+                                </div>
+                                <div class="code-line indent">
+                                    <span class="keyword">public string</span> 
+                                    <span class="property">Name</span> 
+                                    <span class="punctuation">=</span> 
+                                    <span class="string">"David"</span><span class="punctuation">;</span>
+                                </div>
+                                <div class="code-line indent">
+                                    <span class="keyword">public string[]</span> 
+                                    <span class="property">Skills</span> 
+                                    <span class="punctuation">=</span>
+                                </div>
+                                <div class="code-line indent2">
+                                    <span class="punctuation">{</span> 
+                                    <span class="string">"C#"</span><span class="punctuation">,</span> 
+                                    <span class="string">"Docker"</span><span class="punctuation">,</span> 
+                                    <span class="string">"SQL"</span> 
+                                    <span class="punctuation">};</span>
+                                </div>
+                                <div class="code-line">
+                                    <span class="punctuation">}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+        <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1200">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
 
-        <section id="contact" class="contact">
-            <div class="container">
-                <h2>Contact Me</h2>
-                <p>Let's discuss how I can bring value to your team.</p>
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">About Me</h2>
+                <p class="section-subtitle">Get to know me better</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-text" data-aos="fade-right">
+                    <h3>Hello! I'm David Koteski</h3>
+                    <p>I am an Application Developer with expertise in C#, SQL, Docker, and frontend & backend development. Passionate about scalable solutions, security, and automation.</p>
+                    <p>With a focus on delivering high-quality code and intuitive user experiences, I strive to build applications that make a difference.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-number">2+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">20+</span>
+                            <span class="stat-label">Projects Completed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Client Satisfaction</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual" data-aos="fade-left">
+                    <div class="tech-stack">
+                        <div class="tech-item" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="tech-icon">C#</div>
+                        </div>
+                        <div class="tech-item" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="tech-icon">.NET</div>
+                        </div>
+                        <div class="tech-item" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="tech-icon">SQL</div>
+                        </div>
+                        <div class="tech-item" data-aos="zoom-in" data-aos-delay="400">
+                            <div class="tech-icon">Docker</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Skills & Technologies</h2>
+                <p class="section-subtitle">What I work with</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="100">
+                    <div class="category-icon">💻</div>
+                    <h3>Languages & Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">.NET Core</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="200">
+                    <div class="category-icon">🛠️</div>
+                    <h3>DevOps & Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">CI/CD</span>
+                        <span class="skill-tag">GitHub Actions</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="300">
+                    <div class="category-icon">💾</div>
+                    <h3>Databases</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">SQL Server</span>
+                        <span class="skill-tag">Entity Framework</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                    </div>
+                </div>
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="400">
+                    <div class="category-icon">☁️</div>
+                    <h3>Cloud & More</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Linux</span>
+                        <span class="skill-tag">Scrum</span>
+                        <span class="skill-tag">TDD</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Featured Projects</h2>
+                <p class="section-subtitle">Some of my recent work</p>
+            </div>
+            <div id="github-projects" class="projects-grid">
+                <div class="project-loader">
+                    <div class="loading-spinner"></div>
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Let's Work Together</h2>
+                <p class="section-subtitle">Ready to start your next project?</p>
+            </div>
+            <div class="contact-content" data-aos="fade-up" data-aos-delay="200">
+                <p>I'm always interested in new opportunities and exciting projects. Let's discuss how I can bring value to your team.</p>
                 <div class="contact-buttons">
-                    <a href="mailto:david.koteski@outlook.com" class="btn" aria-label="Email David Koteski">Email Me</a>
-                    <a href="https://www.linkedin.com/in/david-koteski-22534128b/" target="_blank" rel="noopener noreferrer" class="btn" aria-label="LinkedIn Profile">LinkedIn</a>
-                </div>
-                <div class="user-info">
-                    <p>GitHub Username: <span id="current-user">seakyy</span></p>
+                    <a href="mailto:david.koteski@outlook.com" class="btn btn-primary">
+                        <span>Email Me</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/david-koteski-22534128b/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                        <span>LinkedIn</span>
+                    </a>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer>
-        <div class="container footer-container">
-            <p>&copy; <span id="current-year">2025</span> David Koteski</p>
-            <div class="footer-right">
-                <span id="current-time"></span>
-                <a href="#" id="back-to-top" class="back-to-top" aria-label="Back to top">↑</a>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; <span id="current-year">2025</span> David Koteski. All rights reserved.</p>
+                <div class="footer-links">
+                    <span id="current-time"></span>
+                    <a href="#home" class="back-to-top">↑</a>
+                </div>
             </div>
         </div>
     </footer>
 </body>
-
 </html>
