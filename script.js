@@ -1,217 +1,288 @@
-/**
- * Portfolio functionality
- * Current User: seakyy
- * Current Date: 2025-03-07 13:01:54
- */
-
-document.addEventListener("DOMContentLoaded", function () {
-    updateCurrentYear();
-    updateCurrentTime();
-    setInterval(updateCurrentTime, 1000);
-    fetchGitHubRepos();
-    setupBackToTopButton();
-    setupSmoothScrolling();
-    setupThemeToggle();
-    setupHeaderScroll();
-    setupKeyboardShortcuts();
-});
-
-
-function updateCurrentYear() {
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-}
-
-
-function updateCurrentTime() {
-    const now = new Date();
-    const timeString = now.toISOString().replace('T', ' ').substring(0, 19);
-    document.getElementById('current-time').textContent = timeString;
-}
-
-
-function fetchGitHubRepos() {
-    const username = document.getElementById('current-user').textContent || "seakyy";
-    const repoContainer = document.getElementById("github-projects");
-
-    fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(repos => {
-            displayRepos(repos, repoContainer);
-        })
-        .catch(error => {
-            displayError(error, repoContainer);
-        });
-}
-
-/**
- * Displays repositories in the container
- * @param {Array} repos - List of repositories
- * @param {HTMLElement} container - Container element for repos
- */
-function displayRepos(repos, container) {
-    if (repos.length === 0) {
-        container.innerHTML = "<p>No repositories found.</p>";
-        return;
+// Enhanced JavaScript for modern portfolio
+class PortfolioApp {
+    constructor() {
+        this.init();
     }
 
-    container.innerHTML = "";
-    repos.forEach(repo => {
-        const project = document.createElement("div");
-        project.classList.add("project");
+    init() {
+        this.setupEventListeners();
+        this.initializeAOS();
+        this.setupNavigation();
+        this.loadGitHubProjects();
+        this.updateFooter();
+        this.setupScrollEffects();
+    }
 
-        // Format date
-        const updatedDate = new Date(repo.updated_at);
-        const formattedDate = updatedDate.toLocaleDateString();
-
-        project.innerHTML = `
-            <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
-            <p>${repo.description || "No description available."}</p>
-            <div class="project-meta">
-                <span>${repo.language || "Various"}</span>
-                <span>Updated: ${formattedDate}</span>
-            </div>
-        `;
-        container.appendChild(project);
-    });
-}
-
-/**
- * Displays error message when fetching repos fails
- * @param {Error} error - Error object
- * @param {HTMLElement} container - Container element for error message
- */
-function displayError(error, container) {
-    console.error("Error fetching GitHub repositories:", error);
-    container.innerHTML = `
-        <div class="error-message">
-            <p>Failed to load projects. Please try again later.</p>
-            <p>Error: ${error.message}</p>
-        </div>
-    `;
-}
-
-
-function setupBackToTopButton() {
-    const backToTopButton = document.getElementById('back-to-top');
-
-    // Initially hide the button
-    backToTopButton.style.display = 'none';
-
-    backToTopButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    setupEventListeners() {
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setupMobileMenu();
+            this.setupSmoothScrolling();
         });
-    });
 
-    // Show/hide the button based on scroll position
-    window.addEventListener('scroll', function () {
-        backToTopButton.style.display = window.scrollY > 300 ? 'flex' : 'none';
-    });
-}
+        window.addEventListener('scroll', () => {
+            this.handleNavbarScroll();
+            this.updateScrollProgress();
+        });
 
+        window.addEventListener('resize', () => {
+            this.handleResize();
+        });
+    }
 
-function setupSmoothScrolling() {
-    const navLinks = document.querySelectorAll('.nav-links a');
+    initializeAOS() {
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 1000,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 100,
+                disable: 'mobile'
+            });
+        }
+    }
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (targetId.startsWith('#')) {
+    setupNavigation() {
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
-
+                const targetId = link.getAttribute('href');
                 const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                    const headerHeight = document.querySelector('header').offsetHeight;
-                    const targetPosition = targetSection.offsetTop - headerHeight;
 
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 80;
                     window.scrollTo({
-                        top: targetPosition,
+                        top: offsetTop,
                         behavior: 'smooth'
                     });
                 }
-            }
-        });
-    });
-}
 
-
-function setupThemeToggle() {
-    const themeToggle = document.getElementById('theme-toggle');
-
-    // Apply saved theme or check system preference
-    applyThemePreference();
-
-    // Toggle theme when button is clicked
-    themeToggle.addEventListener('click', () => {
-        if (document.body.classList.contains('dark-theme')) {
-            // Switch to light theme
-            document.body.classList.remove('dark-theme');
-            document.body.classList.add('light-theme');
-            localStorage.setItem('theme', 'light');
-        } else {
-            // Switch to dark theme
-            document.body.classList.remove('light-theme');
-            document.body.classList.add('dark-theme');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-
-
-    if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem('theme')) {
-                if (e.matches) {
-                    document.body.classList.add('dark-theme');
-                } else {
-                    document.body.classList.remove('dark-theme');
-                }
-            }
+                // Close mobile menu if open
+                this.closeMobileMenu();
+            });
         });
     }
-}
 
-/**
- * Applies the saved theme preference or uses system preference
- */
-function applyThemePreference() {
-    const savedTheme = localStorage.getItem('theme');
+    setupMobileMenu() {
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
 
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    } else if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-    } else {
-        // If no saved preference, check system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('dark-theme');
+        if (navToggle && navMenu) {
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
         }
     }
-}
 
-function setupHeaderScroll() {
-    window.addEventListener('scroll', function () {
-        const header = document.querySelector('header');
+    closeMobileMenu() {
+        const navMenu = document.querySelector('.nav-menu');
+        const navToggle = document.querySelector('.nav-toggle');
+
+        if (navMenu && navToggle) {
+            navMenu.classList.remove('active');
+            navToggle.classList.remove('active');
+        }
+    }
+
+    handleNavbarScroll() {
+        const navbar = document.querySelector('.navbar');
         if (window.scrollY > 50) {
-            header.classList.add('scrolled');
+            navbar.style.background = 'rgba(15, 23, 42, 0.95)';
+            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
         } else {
-            header.classList.remove('scrolled');
+            navbar.style.background = 'rgba(15, 23, 42, 0.8)';
+            navbar.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
         }
-    });
+    }
+
+    setupSmoothScrolling() {
+        const backToTop = document.querySelector('.back-to-top');
+        if (backToTop) {
+            backToTop.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    }
+
+    updateScrollProgress() {
+        const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        document.documentElement.style.setProperty('--scroll-progress', `${scrolled}%`);
+    }
+
+    setupScrollEffects() {
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe skill tags for staggered animation
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            observer.observe(tag);
+        });
+    }
+
+    async loadGitHubProjects() {
+        const projectsContainer = document.getElementById('github-projects');
+        const username = 'seakyy';
+
+        try {
+            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+            const projects = await response.json();
+
+            if (Array.isArray(projects)) {
+                this.displayProjects(projects, projectsContainer);
+            } else {
+                throw new Error('Invalid response format');
+            }
+        } catch (error) {
+            console.error('Error loading GitHub projects:', error);
+            this.displayError(projectsContainer);
+        }
+    }
+
+    displayProjects(projects, container) {
+        container.innerHTML = '';
+
+        projects.forEach((project, index) => {
+            const projectCard = this.createProjectCard(project, index);
+            container.appendChild(projectCard);
+        });
+    }
+
+    createProjectCard(project, index) {
+        const card = document.createElement('div');
+        card.className = 'project';
+        card.setAttribute('data-aos', 'fade-up');
+        card.setAttribute('data-aos-delay', `${index * 100}`);
+
+        const updatedDate = new Date(project.updated_at).toLocaleDateString();
+        const language = project.language || 'Unknown';
+
+        card.innerHTML = `
+            <h3><a href="${project.html_url}" target="_blank" rel="noopener noreferrer">${project.name}</a></h3>
+            <p>${project.description || 'No description available.'}</p>
+            <div class="project-meta">
+                <span>Language: ${language}</span>
+                <span>Updated: ${updatedDate}</span>
+            </div>
+        `;
+
+        return card;
+    }
+
+    displayError(container) {
+        container.innerHTML = `
+            <div class="error-message">
+                <p>Unable to load projects at the moment. Please try again later.</p>
+            </div>
+        `;
+    }
+
+    updateFooter() {
+        const currentYear = document.getElementById('current-year');
+        const currentTime = document.getElementById('current-time');
+
+        if (currentYear) {
+            currentYear.textContent = new Date().getFullYear();
+        }
+
+        if (currentTime) {
+            this.updateTime();
+            setInterval(() => this.updateTime(), 1000);
+        }
+    }
+
+    updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('current-time').textContent = timeString;
+    }
+
+    handleResize() {
+        // Close mobile menu on resize
+        if (window.innerWidth > 768) {
+            this.closeMobileMenu();
+        }
+
+        // Refresh AOS on resize
+        if (typeof AOS !== 'undefined') {
+            AOS.refresh();
+        }
+    }
 }
 
+// Initialize the portfolio app
+new PortfolioApp();
 
-function setupKeyboardShortcuts() {
-    // Theme toggle with Ctrl+Alt+T
-    document.addEventListener('keydown', function (e) {
-        if (e.ctrlKey && e.altKey && e.key === 't') {
-            document.getElementById('theme-toggle').click();
-        }
-    });
-}
+// Additional smooth animations
+document.addEventListener('DOMContentLoaded', () => {
+    // Add loading animation to page
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease-in-out';
+
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+
+    // Typing animation for hero title
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        const originalText = heroTitle.innerHTML;
+        heroTitle.innerHTML = '';
+
+        setTimeout(() => {
+            heroTitle.innerHTML = originalText;
+            heroTitle.classList.add('typing-animation');
+        }, 500);
+    }
+});
+
+// Performance optimization
+const debounce = (func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
+
+// Debounced scroll and resize handlers
+window.addEventListener('scroll', debounce(() => {
+    // Additional scroll effects can be added here
+}, 10));
+
+window.addEventListener('resize', debounce(() => {
+    // Additional resize effects can be added here
+}, 250));
