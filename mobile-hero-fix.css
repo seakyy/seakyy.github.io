@@ -1,0 +1,62 @@
+/* Hero Stability Fix - Add this to your existing style.css */
+
+/* Ensure hero section is always stable on all devices */
+.hero {
+    transform: none !important;
+    position: relative !important;
+    will-change: auto !important;
+    -webkit-transform: none !important;
+}
+
+.hero-container {
+    transform: none !important;
+    position: relative !important;
+    will-change: auto !important;
+    -webkit-transform: none !important;
+}
+
+/* Remove any potential transform on hero background */
+.hero::before {
+    transform: none !important;
+    -webkit-transform: none !important;
+}
+
+/* Keep only the floating animation for the code card, but make it subtle */
+.floating-card {
+    animation: gentleFloat 8s ease-in-out infinite;
+}
+
+@keyframes gentleFloat {
+    0%, 100% { 
+        transform: translateY(0px);
+    }
+    50% { 
+        transform: translateY(-10px);
+    }
+}
+
+/* Ensure no parallax effects on any child elements */
+.hero * {
+    transform: none !important;
+    will-change: auto !important;
+}
+
+/* Override any existing parallax styles */
+@media (min-width: 769px) {
+    .hero {
+        transform: none !important;
+        position: relative !important;
+    }
+}
+
+/* Additional safety for all browsers */
+.hero,
+.hero-container,
+.hero::before,
+.hero::after {
+    transform: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+}

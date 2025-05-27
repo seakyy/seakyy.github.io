@@ -1,6 +1,8 @@
-// Enhanced JavaScript for modern portfolio
+// Enhanced JavaScript for modern portfolio with stable hero section
 class PortfolioApp {
     constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.isTouch = 'ontouchstart' in window;
         this.init();
     }
 
@@ -11,32 +13,54 @@ class PortfolioApp {
         this.loadGitHubProjects();
         this.updateFooter();
         this.setupScrollEffects();
+        this.setupMobileOptimizations();
     }
 
     setupEventListeners() {
         document.addEventListener('DOMContentLoaded', () => {
             this.setupMobileMenu();
             this.setupSmoothScrolling();
+            this.handleViewportMeta();
         });
 
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', this.debounce(() => {
             this.handleNavbarScroll();
             this.updateScrollProgress();
-        });
+        }, 10));
 
-        window.addEventListener('resize', () => {
+        window.addEventListener('resize', this.debounce(() => {
             this.handleResize();
-        });
+        }, 250));
+
+        // Touch events for mobile
+        if (this.isTouch) {
+            document.addEventListener('touchstart', () => { }, { passive: true });
+        }
+    }
+
+    handleViewportMeta() {
+        // Ensure proper viewport scaling on mobile
+        let viewport = document.querySelector('meta[name="viewport"]');
+        if (!viewport) {
+            viewport = document.createElement('meta');
+            viewport.name = 'viewport';
+            document.head.appendChild(viewport);
+        }
+        viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes';
     }
 
     initializeAOS() {
         if (typeof AOS !== 'undefined') {
             AOS.init({
-                duration: 1000,
+                duration: this.isMobile ? 600 : 1000,
                 easing: 'ease-out-cubic',
                 once: true,
-                offset: 100,
-                disable: 'mobile'
+                offset: this.isMobile ? 50 : 100,
+                disable: false,
+                mobile: {
+                    duration: 600,
+                    offset: 50
+                }
             });
         }
     }
@@ -51,7 +75,7 @@ class PortfolioApp {
                 const targetSection = document.querySelector(targetId);
 
                 if (targetSection) {
-                    const offsetTop = targetSection.offsetTop - 80;
+                    const offsetTop = targetSection.offsetTop - (this.isMobile ? 70 : 80);
                     window.scrollTo({
                         top: offsetTop,
                         behavior: 'smooth'
@@ -62,16 +86,69 @@ class PortfolioApp {
                 this.closeMobileMenu();
             });
         });
+
+        // Active link highlighting
+        this.updateActiveNavLink();
+        window.addEventListener('scroll', this.debounce(() => {
+            this.updateActiveNavLink();
+        }, 100));
+    }
+
+    updateActiveNavLink() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        let currentSection = '';
+        const scrollPosition = window.scrollY + 100;
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSection}`) {
+                link.classList.add('active');
+            }
+        });
     }
 
     setupMobileMenu() {
         const navToggle = document.querySelector('.nav-toggle');
         const navMenu = document.querySelector('.nav-menu');
+        const body = document.body;
 
         if (navToggle && navMenu) {
-            navToggle.addEventListener('click', () => {
+            navToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 navMenu.classList.toggle('active');
                 navToggle.classList.toggle('active');
+
+                // Prevent body scroll when menu is open
+                if (navMenu.classList.contains('active')) {
+                    body.style.overflow = 'hidden';
+                } else {
+                    body.style.overflow = '';
+                }
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                    this.closeMobileMenu();
+                }
+            });
+
+            // Close menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    this.closeMobileMenu();
+                }
             });
         }
     }
@@ -79,21 +156,27 @@ class PortfolioApp {
     closeMobileMenu() {
         const navMenu = document.querySelector('.nav-menu');
         const navToggle = document.querySelector('.nav-toggle');
+        const body = document.body;
 
         if (navMenu && navToggle) {
             navMenu.classList.remove('active');
             navToggle.classList.remove('active');
+            body.style.overflow = '';
         }
     }
 
     handleNavbarScroll() {
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(15, 23, 42, 0.95)';
+        const scrolled = window.scrollY > 50;
+
+        if (scrolled) {
+            navbar.style.background = 'rgba(15, 23, 42, 0.98)';
             navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+            navbar.classList.add('scrolled');
         } else {
-            navbar.style.background = 'rgba(15, 23, 42, 0.8)';
+            navbar.style.background = 'rgba(15, 23, 42, 0.95)';
             navbar.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            navbar.classList.remove('scrolled');
         }
     }
 
@@ -107,6 +190,17 @@ class PortfolioApp {
                     behavior: 'smooth'
                 });
             });
+
+            // Show/hide back to top button
+            window.addEventListener('scroll', this.debounce(() => {
+                if (window.scrollY > 300) {
+                    backToTop.style.opacity = '1';
+                    backToTop.style.pointerEvents = 'auto';
+                } else {
+                    backToTop.style.opacity = '0';
+                    backToTop.style.pointerEvents = 'none';
+                }
+            }, 100));
         }
     }
 
@@ -116,19 +210,21 @@ class PortfolioApp {
     }
 
     setupScrollEffects() {
-        // Parallax effect for hero section
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            if (hero) {
-                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-            }
-        });
+        // FIXED: Completely removed parallax effect for stable hero section
+        // The hero section will now stay perfectly in place on all devices
 
-        // Intersection Observer for animations
+        // Ensure hero section is always stable
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.transform = 'none';
+            hero.style.position = 'relative';
+            hero.style.willChange = 'auto';
+        }
+
+        // Intersection Observer for animations (keeping the smooth animations for other elements)
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: this.isMobile ? 0.05 : 0.1,
+            rootMargin: this.isMobile ? '0px 0px -20px 0px' : '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
@@ -139,10 +235,51 @@ class PortfolioApp {
             });
         }, observerOptions);
 
-        // Observe skill tags for staggered animation
-        document.querySelectorAll('.skill-tag').forEach(tag => {
-            observer.observe(tag);
+        // Observe elements for scroll animations (excluding hero)
+        document.querySelectorAll('.skill-tag, .project, .skill-category').forEach(element => {
+            observer.observe(element);
         });
+    }
+
+    setupMobileOptimizations() {
+        // Mark mobile devices
+        if (this.isMobile || this.isTouch) {
+            document.body.classList.add('mobile-device');
+            document.documentElement.classList.add('mobile-device');
+        }
+
+        // Optimize for mobile performance
+        if (this.isMobile) {
+            // Reduce animation complexity
+            document.documentElement.style.setProperty('--transition-base', '0.2s ease-out');
+
+            // Disable hover effects on touch devices
+            if (this.isTouch) {
+                document.documentElement.classList.add('touch-device');
+            }
+
+            // Fix viewport height for mobile browsers (address bar issue)
+            this.setMobileVH();
+        }
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', this.debounce(() => {
+            setTimeout(() => {
+                this.setMobileVH();
+                if (typeof AOS !== 'undefined') {
+                    AOS.refresh();
+                }
+                this.handleResize();
+            }, 100);
+        }, 250));
+    }
+
+    setMobileVH() {
+        // Fix for mobile viewport height issues
+        if (this.isMobile) {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
     }
 
     async loadGitHubProjects() {
@@ -150,13 +287,18 @@ class PortfolioApp {
         const username = 'seakyy';
 
         try {
-            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+            const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=${this.isMobile ? 4 : 6}`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const projects = await response.json();
 
-            if (Array.isArray(projects)) {
+            if (Array.isArray(projects) && projects.length > 0) {
                 this.displayProjects(projects, projectsContainer);
             } else {
-                throw new Error('Invalid response format');
+                throw new Error('No projects found');
             }
         } catch (error) {
             console.error('Error loading GitHub projects:', error);
@@ -177,21 +319,27 @@ class PortfolioApp {
         const card = document.createElement('div');
         card.className = 'project';
         card.setAttribute('data-aos', 'fade-up');
-        card.setAttribute('data-aos-delay', `${index * 100}`);
+        card.setAttribute('data-aos-delay', `${index * (this.isMobile ? 50 : 100)}`);
 
         const updatedDate = new Date(project.updated_at).toLocaleDateString();
         const language = project.language || 'Unknown';
 
         card.innerHTML = `
-            <h3><a href="${project.html_url}" target="_blank" rel="noopener noreferrer">${project.name}</a></h3>
-            <p>${project.description || 'No description available.'}</p>
+            <h3><a href="${project.html_url}" target="_blank" rel="noopener noreferrer">${this.escapeHtml(project.name)}</a></h3>
+            <p>${this.escapeHtml(project.description || 'No description available.')}</p>
             <div class="project-meta">
-                <span>Language: ${language}</span>
+                <span>Language: ${this.escapeHtml(language)}</span>
                 <span>Updated: ${updatedDate}</span>
             </div>
         `;
 
         return card;
+    }
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     displayError(container) {
@@ -217,18 +365,44 @@ class PortfolioApp {
     }
 
     updateTime() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', {
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        document.getElementById('current-time').textContent = timeString;
+        const timeElement = document.getElementById('current-time');
+        if (timeElement) {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            timeElement.textContent = timeString;
+        }
     }
 
     handleResize() {
-        // Close mobile menu on resize
-        if (window.innerWidth > 768) {
+        const newIsMobile = window.innerWidth <= 768;
+
+        // Update mobile state
+        if (newIsMobile !== this.isMobile) {
+            this.isMobile = newIsMobile;
+
+            if (this.isMobile) {
+                document.body.classList.add('mobile-device');
+            } else {
+                document.body.classList.remove('mobile-device');
+            }
+
+            this.setupMobileOptimizations();
+        }
+
+        // Always ensure hero is stable on all devices
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.transform = 'none';
+            hero.style.position = 'relative';
+            hero.style.willChange = 'auto';
+        }
+
+        // Close mobile menu on desktop
+        if (!this.isMobile) {
             this.closeMobileMenu();
         }
 
@@ -236,53 +410,69 @@ class PortfolioApp {
         if (typeof AOS !== 'undefined') {
             AOS.refresh();
         }
+
+        // Update viewport height for mobile browsers
+        this.setMobileVH();
+    }
+
+    // Utility function for debouncing
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
 }
 
 // Initialize the portfolio app
-new PortfolioApp();
+const portfolio = new PortfolioApp();
 
-// Additional smooth animations
+// Page load animations
 document.addEventListener('DOMContentLoaded', () => {
-    // Add loading animation to page
+    // Prevent flash of unstyled content
     document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease-in-out';
+    document.body.style.transition = 'opacity 0.3s ease-in-out';
 
-    setTimeout(() => {
+    // Fade in after DOM is ready
+    requestAnimationFrame(() => {
         document.body.style.opacity = '1';
-    }, 100);
+    });
 
-    // Typing animation for hero title
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
-        const originalText = heroTitle.innerHTML;
-        heroTitle.innerHTML = '';
-
-        setTimeout(() => {
-            heroTitle.innerHTML = originalText;
-            heroTitle.classList.add('typing-animation');
-        }, 500);
+    // Ensure hero is properly positioned on all devices
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        hero.style.transform = 'none';
+        hero.style.position = 'relative';
+        hero.style.willChange = 'auto';
     }
 });
 
-// Performance optimization
-const debounce = (func, wait) => {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-};
+// Additional stability fixes
+window.addEventListener('load', () => {
+    // Double-check hero positioning after all resources are loaded
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        hero.style.transform = 'none !important';
+        hero.style.position = 'relative';
+        hero.style.willChange = 'auto';
+    }
+});
 
-// Debounced scroll and resize handlers
-window.addEventListener('scroll', debounce(() => {
-    // Additional scroll effects can be added here
-}, 10));
+// Performance monitoring
+if (window.performance && window.performance.mark) {
+    window.addEventListener('load', () => {
+        window.performance.mark('portfolio-loaded');
 
-window.addEventListener('resize', debounce(() => {
-    // Additional resize effects can be added here
-}, 250));
+        setTimeout(() => {
+            const navigation = performance.getEntriesByType('navigation')[0];
+            if (navigation) {
+                console.log(`Page load time: ${navigation.loadEventEnd - navigation.loadEventStart}ms`);
+            }
+        }, 0);
+    });
+}
