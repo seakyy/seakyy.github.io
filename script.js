@@ -479,81 +479,212 @@ if (window.performance && window.performance.mark) {
 
 
 
-//Cyber Effects Class
-class CyberEffects {
+class EnhancedCyberEffects {
     constructor() {
+        this.codeRainContainer = null;
+        this.isActive = false;
+        this.isInitialized = false;
         this.init();
     }
 
     init() {
-        this.setupCyberSwitch();
-        this.createMatrixRainContainer();
+        console.log('⚡ Initializing Enhanced Cyber Effects...');
+        
+        setTimeout(() => {
+            this.createCodeRainContainer();
+            this.setupCyberSwitch();
+            this.preloadCodeRain();
+            this.addEffectStyles();
+            this.isInitialized = true;
+            console.log('✅ Enhanced Cyber Effects fully initialized');
+        }, 100);
     }
 
-    createMatrixRainContainer() {
-        if (!document.getElementById('matrixRain')) {
-            const matrixRain = document.createElement('div');
-            matrixRain.id = 'matrixRain';
-            matrixRain.className = 'matrix-rain';
-            document.body.appendChild(matrixRain);
+    addEffectStyles() {
+        // Add CSS keyframes only for effects
+        if (!document.querySelector('#enhanced-cyber-effects-styles')) {
+            const style = document.createElement('style');
+            style.id = 'enhanced-cyber-effects-styles';
+            style.textContent = `
+                @keyframes enhanced-cyber-code-fall {
+                    from {
+                        transform: translateY(-200px);
+                        opacity: 0;
+                    }
+                    15% {
+                        opacity: 1;
+                    }
+                    85% {
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateY(calc(100vh + 200px));
+                        opacity: 0;
+                    }
+                }
+                
+                @keyframes enhanced-cyber-circuit-fade {
+                    0% { opacity: 0; transform: scale(1); }
+                    25% { opacity: 0.5; transform: scale(1.02); }
+                    75% { opacity: 0.5; transform: scale(0.98); }
+                    100% { opacity: 0; transform: scale(1); }
+                }
+
+                @keyframes enhanced-cyber-data-pulse {
+                    0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+                }
+            `;
+            document.head.appendChild(style);
         }
     }
 
-    createMatrixRain() {
-        const matrixRain = document.getElementById('matrixRain');
-        matrixRain.innerHTML = ''; // Clear existing columns
+    createCodeRainContainer() {
+        // Remove existing container if any
+        const existing = document.getElementById('enhancedCyberCodeRain');
+        if (existing) {
+            existing.remove();
+        }
 
-        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン{}[]()><';
-        const columns = Math.floor(window.innerWidth / 20);
+        const codeRain = document.createElement('div');
+        codeRain.id = 'enhancedCyberCodeRain';
+        codeRain.className = 'enhanced-cyber-code-rain';
+        codeRain.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        `;
+
+        document.body.appendChild(codeRain);
+        this.codeRainContainer = codeRain;
+        console.log('✅ Enhanced cyber code rain container created');
+    }
+
+    preloadCodeRain() {
+        this.generateCodeRain();
+    }
+
+    generateCodeRain() {
+        if (!this.codeRainContainer) {
+            console.error('❌ Enhanced cyber code rain container not found');
+            return;
+        }
+
+        this.codeRainContainer.innerHTML = '';
+
+        const cyberTerms = [
+            'FIREWALL', 'ENCRYPTION', 'MALWARE', 'PHISHING', 'EXPLOIT',
+            'VULNERABILITY', 'PENETRATION', 'BACKDOOR', 'TROJAN', 'ROOTKIT',
+            'DDOS', 'BOTNET', 'RANSOMWARE', 'KEYLOGGER', 'SPYWARE',
+            'INTRUSION', 'AUTHENTICATION', 'AUTHORIZATION', 'PKI', 'SSL/TLS',
+            'IDS/IPS', 'SIEM', 'SOC', 'INCIDENT', 'FORENSICS',
+            'THREAT', 'RISK', 'COMPLIANCE', 'GOVERNANCE', 'AUDIT',
+            '0x41414141', '0xDEADBEEF', 'SHELL', 'ROOT', 'ADMIN',
+            'CRYPTO', 'HASH', 'SALT', 'NONCE', 'CIPHER',
+            'METASPLOIT', 'NMAP', 'WIRESHARK', 'BURP', 'KALI',
+            'ZERO-DAY', 'APT', 'C2', 'PAYLOAD', 'SANDBOX',
+            'HONEYPOT', 'WAF', 'EDR', 'XSS', 'CSRF'
+        ];
+
+        const columns = Math.floor(window.innerWidth / 35);
 
         for (let i = 0; i < columns; i++) {
             const column = document.createElement('div');
-            column.className = 'matrix-column';
-            column.style.left = i * 20 + 'px';
-            column.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            column.style.animationDelay = Math.random() * 2 + 's';
+            column.className = 'enhanced-cyber-code-column';
+            column.style.cssText = `
+                position: absolute;
+                top: -200px;
+                left: ${i * 35}px;
+                font-family: 'Courier New', 'Share Tech Mono', monospace;
+                font-size: ${10 + Math.random() * 6}px;
+                color: #ffc107;
+                white-space: pre-line;
+                animation: enhanced-cyber-code-fall ${3 + Math.random() * 3}s linear infinite;
+                animation-delay: ${Math.random() * 2}s;
+                text-shadow: 0 0 8px rgba(255, 193, 7, 0.9), 0 0 15px rgba(255, 235, 59, 0.7);
+                line-height: 1.4;
+                text-align: center;
+                font-weight: bold;
+            `;
 
             let text = '';
-            for (let j = 0; j < 20; j++) {
-                text += chars[Math.floor(Math.random() * chars.length)];
+            for (let j = 0; j < 10; j++) {
+                const term = cyberTerms[Math.floor(Math.random() * cyberTerms.length)];
+                text += term + '\n';
             }
             column.textContent = text;
 
-            matrixRain.appendChild(column);
+            this.codeRainContainer.appendChild(column);
         }
+        console.log('✅ Enhanced cyber code rain generated with', columns, 'columns');
     }
 
     setupCyberSwitch() {
-        const cyberSwitch = document.getElementById('cyberSwitch');
-        if (!cyberSwitch) return;
+        // Find cyber switch button (ohne es zu stylen!)
+        let cyberSwitch = document.getElementById('cyberSwitch') ||
+                         document.querySelector('.cyber-switch') ||
+                         document.querySelector('a[href="https://koteski.ch"]');
 
+        if (!cyberSwitch) {
+            console.error('❌ Cyber switch button not found! Retrying in 1 second...');
+            setTimeout(() => this.setupCyberSwitch(), 1000);
+            return;
+        }
+
+        console.log('✅ Cyber switch button found:', cyberSwitch);
+
+        // WICHTIG: Button-Styling NICHT ändern, nur Event-Listener hinzufügen
         cyberSwitch.addEventListener('click', (e) => {
-            this.activateCyberMode(e);
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('⚡ Cyber switch clicked!');
+
+            if (!this.isActive) {
+                this.activateCyberMode();
+            }
         });
 
-        // Preload matrix rain
-        this.createMatrixRain();
+        console.log('✅ Cyber switch event listener attached (without styling changes)');
     }
 
-    activateCyberMode(e) {
-        e.preventDefault();
+    activateCyberMode() {
+        if (this.isActive) return;
+        this.isActive = true;
 
-        // Activate matrix rain
-        const matrixRain = document.getElementById('matrixRain');
-        matrixRain.classList.add('active');
+        console.log('⚡ Enhanced Cyber mode activation started!');
 
-        // Create screen flash effect
+        // Show cyber code rain
+        if (this.codeRainContainer) {
+            this.codeRainContainer.style.opacity = '1';
+            this.codeRainContainer.classList.add('active');
+            console.log('🌧️ Enhanced cyber code rain activated');
+        }
+
+        // Create effects
         this.createScreenFlash();
+        this.createCircuitEffect();
+        this.createDataStream();
 
         // Redirect after effects
         setTimeout(() => {
+            console.log('🔄 Redirecting to koteski.ch...');
             window.location.href = 'https://koteski.ch';
-        }, 800);
+        }, 1800);
 
-        // Remove matrix rain after some time
+        // Cleanup
         setTimeout(() => {
-            matrixRain.classList.remove('active');
-        }, 2000);
+            if (this.codeRainContainer) {
+                this.codeRainContainer.style.opacity = '0';
+                this.codeRainContainer.classList.remove('active');
+            }
+            this.isActive = false;
+        }, 4000);
     }
 
     createScreenFlash() {
@@ -564,45 +695,111 @@ class CyberEffects {
             left: 0;
             width: 100%;
             height: 100%;
-            background: #ffc107;
+            background: linear-gradient(45deg, #ffc107, #ffeb3b, #ffca28);
             z-index: 9999;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.1s ease;
+            transition: opacity 0.3s ease;
         `;
         document.body.appendChild(flash);
 
-        // Flash sequence
         setTimeout(() => {
-            flash.style.opacity = '0.3';
+            flash.style.opacity = '0.6';
             setTimeout(() => {
                 flash.style.opacity = '0';
                 setTimeout(() => {
-                    document.body.removeChild(flash);
-                }, 100);
-            }, 100);
-        }, 50);
+                    if (document.body.contains(flash)) {
+                        document.body.removeChild(flash);
+                    }
+                }, 300);
+            }, 400);
+        }, 200);
+
+        console.log('🟡 Yellow screen flash created');
+    }
+
+    createCircuitEffect() {
+        const circuit = document.createElement('div');
+        circuit.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 25% 25%, rgba(255, 193, 7, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 235, 59, 0.3) 0%, transparent 50%),
+                linear-gradient(90deg, transparent 48%, #ffc107 49%, #ffc107 51%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, #ffeb3b 49%, #ffeb3b 51%, transparent 52%);
+            background-size: 80px 80px, 80px 80px, 30px 30px, 30px 30px;
+            opacity: 0;
+            animation: enhanced-cyber-circuit-fade 2s ease-in-out;
+        `;
+
+        document.body.appendChild(circuit);
+
+        setTimeout(() => {
+            if (document.body.contains(circuit)) {
+                document.body.removeChild(circuit);
+            }
+        }, 2000);
+
+        console.log('⚡ Enhanced cyber circuit effect created');
+    }
+
+    createDataStream() {
+        const stream = document.createElement('div');
+        stream.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', 'Share Tech Mono', monospace;
+            font-size: 1.2rem;
+            color: #ffeb3b;
+            text-shadow: 0 0 20px #ffc107;
+            z-index: 9999;
+            pointer-events: none;
+            animation: enhanced-cyber-data-pulse 1.5s ease-in-out;
+            font-weight: bold;
+            letter-spacing: 2px;
+        `;
+        stream.textContent = '>>> SWITCHING TO CYBER MODE <<<';
+
+        document.body.appendChild(stream);
+
+        setTimeout(() => {
+            if (document.body.contains(stream)) {
+                document.body.removeChild(stream);
+            }
+        }, 1500);
+
+        console.log('📡 Enhanced cyber data stream created');
+    }
+
+    handleResize() {
+        if (this.isInitialized) {
+            this.generateCodeRain();
+        }
     }
 }
 
-// Initialize cyber effects when portfolio app is ready
-if (typeof PortfolioApp !== 'undefined') {
-    // Add to existing PortfolioApp init method
-    const originalInit = PortfolioApp.prototype.init;
-    PortfolioApp.prototype.init = function () {
-        originalInit.call(this);
-        this.cyberEffects = new CyberEffects();
-    };
-} else {
-    // Standalone initialization
-    document.addEventListener('DOMContentLoaded', () => {
-        new CyberEffects();
-    });
-}
+// Initialize enhanced cyber effects - ersetzt die alte CyberEffects Klasse
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('⚡ DOM Content Loaded - Initializing Enhanced Cyber Effects...');
+    
+    const enhancedCyberEffects = new EnhancedCyberEffects();
+    window.enhancedCyberEffects = enhancedCyberEffects;
 
-// Handle window resize for matrix rain
-window.addEventListener('resize', () => {
-    const cyberEffects = window.cyberEffects || new CyberEffects();
-    cyberEffects.createMatrixRain();
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        if (window.enhancedCyberEffects && window.enhancedCyberEffects.isInitialized) {
+            window.enhancedCyberEffects.handleResize();
+        }
+    });
+
+    console.log('✅ Enhanced cyber effects initialized successfully!');
 });
 
