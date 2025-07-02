@@ -476,3 +476,132 @@ if (window.performance && window.performance.mark) {
         }, 0);
     });
 }
+
+
+
+//Cyber Effects Class
+class CyberEffects {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.setupCyberSwitch();
+        this.createMatrixRainContainer();
+    }
+
+    createMatrixRainContainer() {
+        if (!document.getElementById('matrixRain')) {
+            const matrixRain = document.createElement('div');
+            matrixRain.id = 'matrixRain';
+            matrixRain.className = 'matrix-rain';
+            document.body.appendChild(matrixRain);
+        }
+    }
+
+    createMatrixRain() {
+        const matrixRain = document.getElementById('matrixRain');
+        matrixRain.innerHTML = ''; // Clear existing columns
+
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン{}[]()><';
+        const columns = Math.floor(window.innerWidth / 20);
+
+        for (let i = 0; i < columns; i++) {
+            const column = document.createElement('div');
+            column.className = 'matrix-column';
+            column.style.left = i * 20 + 'px';
+            column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            column.style.animationDelay = Math.random() * 2 + 's';
+
+            let text = '';
+            for (let j = 0; j < 20; j++) {
+                text += chars[Math.floor(Math.random() * chars.length)];
+            }
+            column.textContent = text;
+
+            matrixRain.appendChild(column);
+        }
+    }
+
+    setupCyberSwitch() {
+        const cyberSwitch = document.getElementById('cyberSwitch');
+        if (!cyberSwitch) return;
+
+        cyberSwitch.addEventListener('click', (e) => {
+            this.activateCyberMode(e);
+        });
+
+        // Preload matrix rain
+        this.createMatrixRain();
+    }
+
+    activateCyberMode(e) {
+        e.preventDefault();
+
+        // Activate matrix rain
+        const matrixRain = document.getElementById('matrixRain');
+        matrixRain.classList.add('active');
+
+        // Create screen flash effect
+        this.createScreenFlash();
+
+        // Redirect after effects
+        setTimeout(() => {
+            window.location.href = 'https://koteski.ch';
+        }, 800);
+
+        // Remove matrix rain after some time
+        setTimeout(() => {
+            matrixRain.classList.remove('active');
+        }, 2000);
+    }
+
+    createScreenFlash() {
+        const flash = document.createElement('div');
+        flash.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffc107;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+        `;
+        document.body.appendChild(flash);
+
+        // Flash sequence
+        setTimeout(() => {
+            flash.style.opacity = '0.3';
+            setTimeout(() => {
+                flash.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(flash);
+                }, 100);
+            }, 100);
+        }, 50);
+    }
+}
+
+// Initialize cyber effects when portfolio app is ready
+if (typeof PortfolioApp !== 'undefined') {
+    // Add to existing PortfolioApp init method
+    const originalInit = PortfolioApp.prototype.init;
+    PortfolioApp.prototype.init = function () {
+        originalInit.call(this);
+        this.cyberEffects = new CyberEffects();
+    };
+} else {
+    // Standalone initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        new CyberEffects();
+    });
+}
+
+// Handle window resize for matrix rain
+window.addEventListener('resize', () => {
+    const cyberEffects = window.cyberEffects || new CyberEffects();
+    cyberEffects.createMatrixRain();
+});
