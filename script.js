@@ -629,7 +629,7 @@ class EnhancedCyberEffects {
         // Find cyber switch button (ohne es zu stylen!)
         let cyberSwitch = document.getElementById('cyberSwitch') ||
                          document.querySelector('.cyber-switch') ||
-                         document.querySelector('a[href="https://koteski.ch"]');
+                         document.querySelector('a[href="https://portfolio.koteski.ch"]');
 
         if (!cyberSwitch) {
             console.error('❌ Cyber switch button not found! Retrying in 1 second...');
@@ -802,4 +802,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('✅ Enhanced cyber effects initialized successfully!');
 });
+
 
